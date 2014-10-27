@@ -40,7 +40,7 @@ public class World implements Serializable {
     public World() {
         spawnCounter = new CounterMap<String>();
         locations = new HashMap<Point, Location>();
-        generator = new WorldGenerator(this, GameData.LOCATION_PRESETS);
+        generator = new WorldGenerator(this);
         worldDate = new Date();
         initializeCalendar();
     }

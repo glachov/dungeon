@@ -26,25 +26,23 @@ import java.io.Serializable;
 class WorldGenerator implements Serializable {
 
     private final World world;
-    private final LocationPreset[] locationPresets;
     private final int chunkSide;
 
     /**
      * Instantiates a new World generator. This should be called by the constructor of a World object.
      */
-    public WorldGenerator(World world, LocationPreset[] locationPresets) {
-        this(world, locationPresets, 5);
+    public WorldGenerator(World world) {
+        this(world, 5);
     }
 
-    private WorldGenerator(World world, LocationPreset[] locationPresets, int chunkSide) {
+    private WorldGenerator(World world, int chunkSide) {
         this.world = world;
-        this.locationPresets = locationPresets;
         this.chunkSide = chunkSide;
     }
 
     private Location createRandomLocation() {
         // Get a random preset.
-        LocationPreset preset = locationPresets[Game.RANDOM.nextInt(locationPresets.length)];
+        LocationPreset preset = GameData.LOCATION_PRESETS[Game.RANDOM.nextInt(GameData.LOCATION_PRESETS.length)];
         return new Location(preset);
     }
 

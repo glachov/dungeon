@@ -17,10 +17,10 @@ import java.util.HashMap;
  */
 final class GameData {
 
-    static LocationPreset[] LOCATION_PRESETS;
-    private static ClassLoader loader;
     public static final HashMap<String, CreatureBlueprint> CREATURE_BLUEPRINTS = new HashMap<String, CreatureBlueprint>();
     public static final HashMap<String, ItemBlueprint> ITEM_BLUEPRINTS = new HashMap<String, ItemBlueprint>();
+    static LocationPreset[] LOCATION_PRESETS;
+    private static ClassLoader loader;
 
     static void loadGameData() {
         loader = Thread.currentThread().getContextClassLoader();
@@ -121,12 +121,12 @@ final class GameData {
     private static LocationPreset[] loadLocationPresets() {
         ArrayList<LocationPreset> locationPresets = new ArrayList<LocationPreset>();
 
-        String[] clearingCreatures = {"BAT"};
+        String[] clearingCreatures = {"BAT", "RAT", "BEAR"};
         String[] clearingItems = {"STONE"};
         locationPresets.add(new LocationPreset("Clearing", 0.9, clearingCreatures, clearingItems));
 
-        String[] desertCreatures = {"BAT"};
-        String[] desertItems = {};
+        String[] desertCreatures = {"RABBIT", "ZOMBIE", "SPIDER"};
+        String[] desertItems = {"AXE"};
         locationPresets.add(new LocationPreset("Desert", 1.0, desertCreatures, desertItems));
 
         String[] forestCreatures = {"BAT"};
@@ -134,8 +134,8 @@ final class GameData {
         locationPresets.add(new LocationPreset("Forest", 0.7, forestCreatures, forestItems));
 
         String[] graveyardCreatures = {"BAT"};
-        String[] graveyardItems = {};
-        locationPresets.add(new LocationPreset("Graveyard", 0.7, graveyardCreatures, graveyardItems));
+        String[] graveyardItems = {"LONGSWORD", "APPLE"};
+        locationPresets.add(new LocationPreset("Graveyard", 0.9, graveyardCreatures, graveyardItems));
 
         String[] meadowCreatures = {"BAT"};
         String[] meadowItems = {"STONE"};
