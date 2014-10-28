@@ -1,0 +1,7 @@
+// Missing colon.
+KEY: VALUE
+KEY VALUE
+
+// Improper boolean.
+KEY: 1
+KEY: true
