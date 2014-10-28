@@ -37,7 +37,7 @@ public final class GameData {
 
     }
 
-
+    // TODO: write more uniform loaders. Benchmark to test what are the most efficient methods for every task.
     private static void loadItemBlueprints() {
         BufferedReader br = new BufferedReader(new InputStreamReader(loader.getResourceAsStream("res/items.txt")));
         String line;
@@ -69,6 +69,8 @@ public final class GameData {
                         blueprint.setHitRate(Double.parseDouble(line.split(":")[1].trim()));
                     } else if (line.startsWith("INTEGRITY_DECREMENT_ON_HIT:")) {
                         blueprint.setIntegrityDecrementOnHit(Integer.parseInt(line.split(":")[1].trim()));
+                    } else if (line.startsWith("FOOD:")) {
+                        blueprint.setFood(Integer.parseInt(line.split(":")[1].trim()) == 1);
                     } else if (line.startsWith("NUTRITION:")) {
                         blueprint.setNutrition(Integer.parseInt(line.split(":")[1].trim()));
                     } else if (line.startsWith("EXPERIENCE_ON_EAT:")) {

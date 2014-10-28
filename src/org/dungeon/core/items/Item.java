@@ -118,7 +118,7 @@ public class Item implements Serializable {
         } else {
             this.curIntegrity = 0;
             // TODO: maybe we should extract the "breaking routine" to another method.
-            if (getClockComponent()) {
+            if (isClock()) {
                 // A clock just broke! Update its last time record.
                 clockComponent.setLastTime(getOwner().getLocation().getWorld().getWorldDate());
             }
@@ -146,7 +146,7 @@ public class Item implements Serializable {
     }
 
     // Food methods
-    public boolean getFoodComponent() {
+    public boolean isFood() {
         return foodComponent != null;
     }
 
@@ -155,7 +155,7 @@ public class Item implements Serializable {
     }
 
     // Clock methods
-    public boolean getClockComponent() {
+    public boolean isClock() {
         return clockComponent != null;
     }
 

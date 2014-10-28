@@ -256,7 +256,7 @@ public class Hero extends Creature {
     public void eatItem(String[] inputWords) {
         Item selectedItem = selectInventoryItem(inputWords);
         if (selectedItem != null) {
-            if (selectedItem.getFoodComponent()) {
+            if (selectedItem.isFood()) {
                 FoodComponent food = selectedItem.getFood();
                 addHealth(food.getNutrition());
                 selectedItem.decrementIntegrity(food.getIntegrityDecrementOnEat());
@@ -305,7 +305,7 @@ public class Hero extends Creature {
 
     boolean hasClock() {
         for (Item item : getInventory().getItems()) {
-            if (item.getClockComponent()) {
+            if (item.isClock()) {
                 return true;
             }
         }
@@ -314,7 +314,7 @@ public class Hero extends Creature {
 
     Item getClock() {
         for (Item item : getInventory().getItems()) {
-            if (item.getClockComponent()) {
+            if (item.isClock()) {
                 return item;
             }
         }

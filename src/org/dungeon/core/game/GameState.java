@@ -70,6 +70,7 @@ public class GameState implements Serializable {
         campaignWorld.getLocation(heroPosition).addCreature(hero);
     }
 
+    // TODO: transfer this to GameData.
     private List<Achievement> createDemoAchievements() {
         List<Achievement> list = new ArrayList<Achievement>();
 
@@ -106,6 +107,7 @@ public class GameState implements Serializable {
         // Battle achievements that rely on the kill count of a specific type.
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Professional Coward requires killing 10 critters.
+        // TODO: write CRITTER and BEAST with mixed case (and refactor creatures.txt afterwards).
         CounterMap<String> professionalCowardRequirements = new CounterMap<String>("CRITTER", 10);
         list.add(new BattleAchievement("Professional Coward", "Kill 10 critters.",
                 100, 0, 0, null, professionalCowardRequirements, null));
