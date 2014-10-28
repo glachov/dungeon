@@ -2,6 +2,8 @@ package org.dungeon.core.game;
 
 import org.dungeon.core.creatures.CreatureBlueprint;
 import org.dungeon.core.items.ItemBlueprint;
+import org.dungeon.utils.Poem;
+import org.dungeon.utils.PoemBuilder;
 import org.dungeon.utils.StringUtils;
 
 import java.io.BufferedReader;
@@ -9,16 +11,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * The class that stores all the game data that is loaded and not serialized.
  * <p/>
  * Created by Bernardo on 22/10/2014.
  */
-final class GameData {
+public final class GameData {
 
     public static final HashMap<String, CreatureBlueprint> CREATURE_BLUEPRINTS = new HashMap<String, CreatureBlueprint>();
     public static final HashMap<String, ItemBlueprint> ITEM_BLUEPRINTS = new HashMap<String, ItemBlueprint>();
+    public static final List<Poem> POEMS = new ArrayList<Poem>();
     static LocationPreset[] LOCATION_PRESETS;
     private static ClassLoader loader;
 
@@ -28,8 +32,11 @@ final class GameData {
         loadItemBlueprints();
         loadCreatureBlueprints();
 
+        loadPoems();
         LOCATION_PRESETS = loadLocationPresets();
+
     }
+
 
     private static void loadItemBlueprints() {
         BufferedReader br = new BufferedReader(new InputStreamReader(loader.getResourceAsStream("res/items.txt")));
@@ -149,4 +156,43 @@ final class GameData {
         locationPresets.toArray(locationPresetsArray);
         return locationPresetsArray;
     }
+
+    private static void loadPoems() {
+        String IDENTIFIER_TITLE = "TITLE:";
+        String IDENTIFIER_AUTHOR = "AUTHOR:";
+        String IDENTIFIER_CONTENT = "CONTENT:";
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(loader.getResourceAsStream("res/poems.txt")));
+
+        String line;
+
+        StringBuilder contentBuilder = new StringBuilder();
+        PoemBuilder pb = new PoemBuilder();
+
+        try {
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith(IDENTIFIER_TITLE)) {
+                    if (pb.isComplete()) {
+                        POEMS.add(pb.createPoem());
+                        pb = new PoemBuilder();
+                        contentBuilder.setLength(0);
+                    }
+                    pb.setTitle(line.substring(IDENTIFIER_TITLE.length()).trim());
+                } else if (line.startsWith(IDENTIFIER_AUTHOR)) {
+                    pb.setAuthor(line.substring(IDENTIFIER_AUTHOR.length()).trim());
+                } else if (line.startsWith(IDENTIFIER_CONTENT)) {
+                    contentBuilder.append(line.substring(IDENTIFIER_CONTENT.length()).trim());
+                    while ((line = br.readLine()) != null && !line.isEmpty() && !line.startsWith(IDENTIFIER_TITLE)) {
+                        contentBuilder.append('\n').append(line.trim());
+                    }
+                    pb.setContent(contentBuilder.toString());
+                }
+            }
+        } catch (IOException ignored) {
+        }
+        if (pb.isComplete()) {
+            POEMS.add(pb.createPoem());
+        }
+    }
+
 }

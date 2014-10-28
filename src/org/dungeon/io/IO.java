@@ -18,6 +18,7 @@ package org.dungeon.io;
 
 import org.dungeon.core.game.Game;
 import org.dungeon.utils.Constants;
+import org.dungeon.utils.Poem;
 import org.dungeon.utils.StringUtils;
 
 import java.awt.*;
@@ -47,7 +48,7 @@ public class IO {
      * Writes a string of text using a specific color.
      *
      * @param string the string of text to be written.
-     * @param color the color of the text.
+     * @param color  the color of the text.
      */
     public static void writeString(String string, Color color) {
         writeString(string, color, true);
@@ -98,5 +99,9 @@ public class IO {
         }
         writeString(stringBuilder.toString(), fillColor, false);
         writeString(value, textColor, true);
+    }
+
+    public static void writePoem(Poem poem) {
+        writeString(poem.getTitle() + "\n\n" + poem.getContent() + "\n\n" + poem.getAuthor());
     }
 }

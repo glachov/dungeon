@@ -46,6 +46,7 @@ public class GameState implements Serializable {
 
     private boolean saved;
     private int nextHintIndex;
+    private int nextPoemIndex;
 
     private int totalAchievementsCount;
     private int unlockedAchievementsCount;
@@ -169,7 +170,7 @@ public class GameState implements Serializable {
         return nextHintIndex;
     }
 
-    void setNextHintIndex(int nextHintIndex) {
+    private void setNextHintIndex(int nextHintIndex) {
         this.nextHintIndex = nextHintIndex;
     }
 
@@ -179,6 +180,23 @@ public class GameState implements Serializable {
             setNextHintIndex(0);
         } else {
             setNextHintIndex(newIndex);
+        }
+    }
+
+    public int getNextPoemIndex() {
+        return nextPoemIndex;
+    }
+
+    private void setNextPoemIndex(int nextPoemIndex) {
+        this.nextPoemIndex = nextPoemIndex;
+    }
+
+    private void incrementNextPoemIndex() {
+        int newIndex = getNextPoemIndex() + 1;
+        if (newIndex == GameData.POEMS.size()) {
+            setNextPoemIndex(0);
+        } else {
+            setNextPoemIndex(newIndex);
         }
     }
 
@@ -271,6 +289,15 @@ public class GameState implements Serializable {
         IO.writeString(Hints.hintsArray[getNextHintIndex()]);
         incrementNextHintIndex();
     }
+
+    /**
+     * Prints the next poem.
+     */
+    public void printNextPoem() {
+        IO.writePoem(GameData.POEMS.get(nextPoemIndex));
+        incrementNextPoemIndex();
+    }
+
 
     /**
      * Returns the hero's name.

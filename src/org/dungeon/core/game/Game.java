@@ -179,14 +179,14 @@ public class Game {
             Utils.printCredits();
         } else if (firstWord.equals("license") || firstWord.equals("copyright")) {
             LicenseUtils.printLicense();
-        } else if (firstWord.equals("fibonacci") || firstWord.equals("f")) {
+        } else if (firstWord.equals("fibonacci")) {
             if (inputWords.length > 1) {
                 Math.fibonacci(inputWords[1]);
             }
         } else if (firstWord.equals("hint")) {
             gameState.printNextHint();
         } else if (firstWord.equals("poem")) {
-            Poetry.printRandomPoem();
+            gameState.printNextPoem();
         } else if (firstWord.equals("version")) {
             Utils.printVersion();
         } else {
