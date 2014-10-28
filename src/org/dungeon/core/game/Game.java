@@ -51,13 +51,16 @@ public class Game {
             Help.initialize();
         }
 
+        GameData.loadGameData();
+
         // Instantiate the game window.
         gameWindow = new GameWindow();
 
-        Utils.printHeading();
-
-        GameData.loadGameData();
         gameState = Loader.loadGameRoutine();
+    }
+
+    public static GameState getGameState() {
+        return gameState;
     }
 
     /**
@@ -67,6 +70,8 @@ public class Game {
      * @return true if the game did not end. False otherwise.
      */
     public static boolean renderTurn(String inputString) {
+        // Clears the text pane.
+        gameWindow.clearTextPane();
         // Let the player play a turn and get its length (in seconds).
         int turnLength = processInput(inputString);
         // -1 is returned by getTurn when the player issues a quit command.
@@ -184,8 +189,6 @@ public class Game {
             Poetry.printRandomPoem();
         } else if (firstWord.equals("version")) {
             Utils.printVersion();
-        } else if (firstWord.equals("clear")) {
-            gameWindow.clearTextPane();
         } else {
             // The user issued a command, but it was not recognized.
             Utils.printInvalidCommandMessage(inputWords[0]);

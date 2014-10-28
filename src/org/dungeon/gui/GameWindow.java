@@ -17,6 +17,7 @@
 package org.dungeon.gui;
 
 import org.dungeon.core.game.Game;
+import org.dungeon.utils.CommandHistory;
 import org.dungeon.utils.Constants;
 
 import javax.swing.*;
@@ -25,64 +26,86 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class GameWindow extends JFrame {
 
-    // Window configuration. Note that this is fixed in stone so that the text formatting makes sense.
+    // The window configuration is fixed so that the text formatting makes sense.
     private static final int WIDTH = 830;
-    // With "Monospaced 14", this height allows for 24 rows of output.
-    private static final int HEIGHT = 640;
-
-    // java.awt.Color.ORANGE is not orange enough.
-    private static final Color ORANGE = new Color(255, 127, 0);
-    private final StyledDocument document;
+    private static final int HEIGHT = 770;
+    private static Font textFont;
     private final SimpleAttributeSet attributeSet = new SimpleAttributeSet();
+    private CommandHistory commandHistory;
+    private int commandIndex;
+    private StyledDocument document;
+
     private JTextField textField;
     private JTextPane textPane;
 
     public GameWindow() {
+        initTextFont();
         initComponents();
         document = textPane.getStyledDocument();
         setVisible(true);
     }
 
-    private void initComponents() {
+    /**
+     * Initializes the common Font object used to format all the text in the window.
+     * If Consolas is not found in the available fonts, Monospaced is used.
+     */
+    private void initTextFont() {
+        String[] availableFonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        for (String font : availableFonts) {
+            if (font.equals("Consolas")) {
+                textFont = new Font(font, Font.PLAIN, 14);
+                return;
+            }
+        }
+        textFont = new Font("Monospaced", Font.PLAIN, 14);
+    }
 
+    private void initComponents() {
         textPane = new javax.swing.JTextPane();
         textField = new javax.swing.JTextField();
 
         JScrollPane scrollPane = new JScrollPane();
-        JScrollBar scrollBar = scrollPane.getVerticalScrollBar();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle(Constants.FULLNAME);
-        setResizable(false);
 
         textPane.setEditable(false);
-        textPane.setBackground(Color.DARK_GRAY);
+        textPane.setBackground(Color.BLACK);
         textPane.setForeground(Color.LIGHT_GRAY);
-        textPane.setSelectionColor(ORANGE);
-        textPane.setFont(new java.awt.Font("Monospaced", Font.PLAIN, 14));
+        textPane.setFont(textFont);
 
         scrollPane.setViewportView(textPane);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        scrollBar.setBackground(Color.DARK_GRAY);
-
-        getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-        textField.setBackground(Color.DARK_GRAY);
+        textField.setBackground(Color.BLACK);
         textField.setForeground(Color.LIGHT_GRAY);
-        textField.setSelectionColor(ORANGE);
-        textField.setFont(new java.awt.Font("Monospaced", Font.PLAIN, 14));
+        textField.setCaretColor(Color.WHITE);
+        textField.setFont(textFont);
+
         textField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent actionEvent) {
                 textFieldActionPerformed();
             }
         });
+
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                textFieldKeyPressed(e);
+            }
+        });
+
+        getContentPane().add(scrollPane, BorderLayout.CENTER);
         getContentPane().add(textField, BorderLayout.SOUTH);
 
+        setTitle(Constants.FULLNAME);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
         setSize(new java.awt.Dimension(WIDTH, HEIGHT));
+        setResizable(false);
         setLocationRelativeTo(null);
     }
 
@@ -93,33 +116,70 @@ public class GameWindow extends JFrame {
             if (!Game.renderTurn(text)) {
                 System.exit(0);
             }
+            clearTextField();
+            resetCommandIndex();
         }
-        textField.setText(null);
     }
 
-    public void writeToTextPane(String str, Color color, boolean endLine) {
+    private void textFieldKeyPressed(KeyEvent e) {
+        if (commandHistory == null) {
+            commandHistory = Game.getGameState().getCommandHistory();
+            resetCommandIndex();
+        }
+        boolean validKeyPress = false;
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            if (commandIndex > 0) {
+                validKeyPress = true;
+                commandIndex--;
+            }
+        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            if (commandIndex < commandHistory.getCommandCount()) {
+                commandIndex++;
+                // When the index is set to one past the last saved command, just clear the text field.
+                if (commandIndex == commandHistory.getCommandCount()) {
+                    clearTextField();
+                    return;
+                }
+                validKeyPress = true;
+            }
+        }
+        if (validKeyPress) {
+            textField.setText(commandHistory.getCommandAt(commandIndex));
+        }
+    }
+
+    private void resetCommandIndex() {
+        // This is correct.
+        // The index should point to one after the last command, so the up key retrieves the last command.
+        commandIndex = commandHistory.getCommandCount();
+    }
+    /**
+     * Adds a string with a specific foreground color to the text pane.
+     *
+     * @param string the string to be written.
+     * @param color  the color of the text.
+     */
+    public void writeToTextPane(String string, Color color) {
         StyleConstants.setForeground(attributeSet, color);
         try {
-            if (endLine) {
-                document.insertString(document.getLength(), str + '\n', attributeSet);
-            } else {
-                document.insertString(document.getLength(), str, attributeSet);
-            }
-            textPane.setCaretPosition(document.getLength());
-        } catch (BadLocationException e) {
-            e.printStackTrace();
+            document.insertString(document.getLength(), string, attributeSet);
+        } catch (BadLocationException ignored) {
         }
     }
 
     public void clearTextPane() {
         try {
             document.remove(0, document.getLength());
-        } catch (BadLocationException e) {
-            e.printStackTrace();
+        } catch (BadLocationException ignored) {
         }
     }
 
     public void requestFocusOnTextField() {
         textField.requestFocusInWindow();
     }
+
+    private void clearTextField() {
+        textField.setText(null);
+    }
+
 }

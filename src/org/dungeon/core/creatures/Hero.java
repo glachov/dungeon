@@ -349,20 +349,19 @@ public class Hero extends Creature {
     }
 
     public void printHeroStatus() {
-        //IO.writeString(getHeroStatusString());
         IO.writeString(String.format("%s (%s)\n", getName(), getId()));
-        IO.writeFilledLine("Level", Integer.toString(getLevel()));
-        IO.writeFilledLine("Experience", String.format("%d/%d", getExperience(), getExperienceToNextLevel()));
+        IO.writeKeyValueString("Level", Integer.toString(getLevel()));
+        IO.writeKeyValueString("Experience", String.format("%d/%d", getExperience(), getExperienceToNextLevel()));
         // TODO: Enable Health coloring. Red / Yellow / Green / ...
-        IO.writeFilledLine("Health", String.format("%d/%d", getCurHealth(), getMaxHealth()));
-        IO.writeFilledLine("Attack", Integer.toString(getAttack()));
+        IO.writeKeyValueString("Health", String.format("%d/%d", getCurHealth(), getMaxHealth()));
+        IO.writeKeyValueString("Attack", Integer.toString(getAttack()));
     }
 
     public void printWeaponStatus() {
         if (hasWeapon()) {
             Item heroWeapon = getWeapon();
             IO.writeString(heroWeapon.getIntegrityString() + " " + heroWeapon.getName());
-            IO.writeFilledLine("Damage", Integer.toString(heroWeapon.getDamage()));
+            IO.writeKeyValueString("Damage", Integer.toString(heroWeapon.getDamage()));
         } else {
             IO.writeString(Constants.NOT_EQUIPPING_A_WEAPON);
         }

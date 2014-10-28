@@ -50,11 +50,7 @@ public class CommandHistory implements Serializable {
         return characterCount;
     }
 
-    public String getLastCommand() {
-        if (!commands.isEmpty()) {
-            return commands.get(commands.size());
-        } else {
-            return Constants.EMPTY_COMMAND_HISTORY;
-        }
+    public String getCommandAt(int commandIndex) {
+        return commands.get(commandIndex);
     }
 }

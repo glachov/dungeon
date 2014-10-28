@@ -284,9 +284,9 @@ public class GameState implements Serializable {
     public void printGameStatistics() {
         int commandCount = getCommandHistory().getCommandCount();
         long charCount = getCommandHistory().getCharacterCount();
-        IO.writeFilledLine("Commands issued", Integer.toString(commandCount));
-        IO.writeFilledLine("Characters entered", Long.toString(charCount));
-        IO.writeFilledLine("Average characters per command", String.format("%.2f", (double) charCount / commandCount));
+        IO.writeKeyValueString("Commands issued", Integer.toString(commandCount));
+        IO.writeKeyValueString("Characters entered", Long.toString(charCount));
+        IO.writeKeyValueString("Average characters per command", String.format("%.2f", (double) charCount / commandCount));
         // TODO: fix the spawn statistics and add them here.
     }
 }
