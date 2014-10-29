@@ -33,7 +33,7 @@ public class GameWindow extends JFrame {
 
     // The window configuration is fixed so that the text formatting makes sense.
     private static final int WIDTH = 830;
-    private static final int HEIGHT = 770;
+    private static final int HEIGHT = 630;
     private static Font textFont;
     private final SimpleAttributeSet attributeSet = new SimpleAttributeSet();
     private CommandHistory commandHistory;
