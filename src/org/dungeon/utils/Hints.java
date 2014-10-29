@@ -23,6 +23,7 @@ package org.dungeon.utils;
  */
 public class Hints {
 
+    // TODO: extract this to a resource file.
     public static final String[] hintsArray = {
             "Attacks against critters deal 100% bonus damage.",
             "Every combatant movement is considered to be a battle turn.",
@@ -30,6 +31,7 @@ public class Hints {
                     "Otherwise, the creature will attack with its bare hands.",
             "The command 'achievements' will also show the total number of achievements.",
             "You can use 'whereami' to see your coordinates.\n" +
-                    "This command is specially useful when trespassing complex parts of the world."};
+                    "This command is specially useful when trespassing complex parts of the world.",
+            "There is a 'poem' command that prints a poem to the screen."};
 
 }

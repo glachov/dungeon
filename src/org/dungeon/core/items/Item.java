@@ -84,6 +84,10 @@ public class Item implements Serializable {
         this.owner = owner;
     }
 
+    public boolean isEquipped() {
+        return owner != null && owner.getWeapon() == this;
+    }
+
     public String getId() {
         return id;
     }
@@ -96,7 +100,7 @@ public class Item implements Serializable {
         return name;
     }
 
-    String getQualifiedName() {
+    public String getQualifiedName() {
         if (getCurIntegrity() == getMaxIntegrity()) {
             return getName();
         } else {
@@ -150,7 +154,7 @@ public class Item implements Serializable {
         return foodComponent != null;
     }
 
-    public FoodComponent getFood() {
+    public FoodComponent getFoodComponent() {
         return foodComponent;
     }
 
@@ -159,7 +163,7 @@ public class Item implements Serializable {
         return clockComponent != null;
     }
 
-    public ClockComponent getClock() {
+    public ClockComponent getClockComponent() {
         return clockComponent;
     }
 
@@ -181,10 +185,10 @@ public class Item implements Serializable {
         return getHitRate() > Game.RANDOM.nextDouble();
     }
 
-    public String getIntegrityString() {
+    private String getIntegrityString() {
         String weaponIntegrity;
         if (getCurIntegrity() == getMaxIntegrity()) {
-            weaponIntegrity = "Perfect";
+            weaponIntegrity = "";
         } else if (getCurIntegrity() >= getMaxIntegrity() * 0.65) {
             weaponIntegrity = "Slightly damaged";
         } else if (getCurIntegrity() >= getMaxIntegrity() * 0.3) {
@@ -197,10 +201,7 @@ public class Item implements Serializable {
         return weaponIntegrity;
     }
 
-    // Food methods
-    // Selectable implementation
-    public String toSelectionEntry() {
-        return String.format(Constants.SELECTION_ENTRY_FORMAT, String.format("[%s]", getType()), getQualifiedName());
+    public String toListEntry() {
+        return String.format(Constants.LIST_ENTRY_FORMAT, String.format("[%s]", getType()), getName());
     }
-
 }

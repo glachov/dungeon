@@ -19,6 +19,7 @@ package org.dungeon.core.creatures;
 import org.dungeon.core.counters.BattleLog;
 import org.dungeon.core.counters.CounterMap;
 import org.dungeon.core.game.TimeConstants;
+import org.dungeon.core.game.World;
 import org.dungeon.core.items.FoodComponent;
 import org.dungeon.core.items.Inventory;
 import org.dungeon.core.items.Item;
@@ -27,7 +28,6 @@ import org.dungeon.utils.Constants;
 import org.dungeon.utils.Utils;
 
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -37,7 +37,6 @@ import java.util.Date;
 public class Hero extends Creature {
 
     private static final long serialVersionUID = 1L;
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private final Date dateOfBirth;
     private final double minimumLuminosity = 0.3;
     private BattleLog battleLog;
@@ -139,7 +138,7 @@ public class Hero extends Creature {
                 builder.append(Constants.NO_ITEMS).append('\n');
             } else {
                 for (Item curItem : getLocation().getItems()) {
-                    builder.append(curItem.toSelectionEntry()).append('\n');
+                    builder.append(curItem.toListEntry()).append('\n');
                 }
             }
         } else {
@@ -171,8 +170,7 @@ public class Hero extends Creature {
 
     Item selectLocationItem(String[] inputWords) {
         if (inputWords.length == 1) {
-//            return Utils.selectFromList(getLocation().getItems());
-            IO.writeString(Constants.INVALID_INPUT);
+            IO.writeString("Pick what?", Color.ORANGE);
             return null;
         } else {
             Item queryResult = getLocation().findItem(inputWords[1]);
@@ -202,6 +200,7 @@ public class Hero extends Creature {
     // Inventory methods.
     //
     //
+
     /**
      * Attempts to pick and item and add it to the inventory.
      */
@@ -257,7 +256,7 @@ public class Hero extends Creature {
         Item selectedItem = selectInventoryItem(inputWords);
         if (selectedItem != null) {
             if (selectedItem.isFood()) {
-                FoodComponent food = selectedItem.getFood();
+                FoodComponent food = selectedItem.getFoodComponent();
                 addHealth(food.getNutrition());
                 selectedItem.decrementIntegrity(food.getIntegrityDecrementOnEat());
                 // TODO: make not-enough-for-a-full-bite food heal less than a enough-for-a-full-bite food would.
@@ -360,7 +359,7 @@ public class Hero extends Creature {
     public void printWeaponStatus() {
         if (hasWeapon()) {
             Item heroWeapon = getWeapon();
-            IO.writeString(heroWeapon.getIntegrityString() + " " + heroWeapon.getName());
+            IO.writeString(heroWeapon.getQualifiedName());
             IO.writeKeyValueString("Damage", Integer.toString(heroWeapon.getDamage()));
         } else {
             IO.writeString(Constants.NOT_EQUIPPING_A_WEAPON);
@@ -385,14 +384,28 @@ public class Hero extends Creature {
                 getLocation().getWorld().getWorldDate().getTime()) + ".", Color.CYAN);
     }
 
-    public void printDateAndTime() {
-        // TODO: checking time should cost some time.
-        long time = getLocation().getWorld().getWorldDate().getTime();
+    /**
+     * Makes the hero read the current date and time as well as he can.
+     *
+     * @return how many seconds the action lasted.
+     */
+    public int printDateAndTime() {
+        World world = getLocation().getWorld();
+        long worldTime = world.getWorldDate().getTime();
+        int timeSpent = 2;
         if (hasClock()) {
-            // TODO: this repeated getClock() is terrible. Fix it.
-            IO.writeString(getClock().getClock().getTimeString(time));
-        } else {
-            IO.writeString(dateFormat.format(time) + " " + "(" + getLocation().getWorld().getDayPart() + ")");
+            if (hasWeapon() && getWeapon().isClock() && !getWeapon().isBroken()) {
+                // Reading the time from an equipped clock is the fastest possible action.
+                timeSpent += 2;
+            } else {
+                // The hero needed to pick up a watch or something from his inventory, consuming more time.
+                timeSpent += 8;
+            }
+            // Prints whatever the clock shows.
+            IO.writeString(getClock().getClockComponent().getTimeString(worldTime));
         }
+        IO.writeString("You think it is " + Constants.DATE_FORMAT.format(world.getWorldDate()) + ".");
+        IO.writeString("You can see that it is " + world.getDayPart().toString().toLowerCase() + ".");
+        return timeSpent;
     }
 }

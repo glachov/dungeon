@@ -33,17 +33,10 @@ public class Utils {
     public static String LESS_THAN_A_DAY = "Less than a day";
 
     /**
-     * Prints the startup heading.
-     */
-    public static void printHeading() {
-        IO.writeString(Constants.HEADING);
-    }
-
-    /**
      * Prints the full name of the current version of the game.
      */
     public static void printVersion() {
-        IO.writeString(Constants.FULLNAME);
+        IO.writeString(Constants.TITLE);
     }
 
     /**

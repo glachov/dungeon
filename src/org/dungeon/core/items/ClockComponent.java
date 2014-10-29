@@ -16,8 +16,10 @@
  */
 package org.dungeon.core.items;
 
+import org.dungeon.core.game.Game;
+import org.dungeon.utils.Constants;
+
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -27,10 +29,11 @@ import java.util.Date;
  */
 public class ClockComponent implements Serializable {
 
-    private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private Item master;
 
-    /** Used to store the date the clock had when it was broken. */
+    /**
+     * Used to store the date the clock had when it was broken.
+     */
     private Date lastTime;
 
     public void setMaster(Item master) {
@@ -48,12 +51,16 @@ public class ClockComponent implements Serializable {
     public String getTimeString(long time) {
         if (master.isBroken()) {
             if (lastTime == null) {
-                return "The clock is pure junk.";
+                if (Game.RANDOM.nextBoolean()) {
+                    return "The clock is pure junk.";
+                } else {
+                    return "The clock is completely smashed.";
+                }
             } else {
-                return "The clock is broken. It displays " + dateTimeFormat.format(lastTime) + ".";
+                return "The clock is broken. Still, it displays " + Constants.TIME_FORMAT.format(lastTime) + ".";
             }
         } else {
-            return "The clock displays " + dateTimeFormat.format(time) + ".";
+            return "The clock displays " + Constants.TIME_FORMAT.format(time) + ".";
         }
     }
 

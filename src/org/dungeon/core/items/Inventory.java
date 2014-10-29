@@ -17,9 +17,11 @@
 package org.dungeon.core.items;
 
 import org.dungeon.core.creatures.Creature;
+import org.dungeon.core.game.Game;
 import org.dungeon.io.IO;
 import org.dungeon.utils.Constants;
 
+import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +54,15 @@ public class Inventory implements Serializable {
 
     public void printItems() {
         if (itemList.size() == 0) {
-            IO.writeString("Inventory is empty.");
-        } else {
-            StringBuilder builder = new StringBuilder();
-            for (Item itemInInventory : itemList) {
-                builder.append(itemInInventory.toSelectionEntry()).append('\n');
+            if (Game.RANDOM.nextBoolean()) {
+                IO.writeString("Inventory is empty.");
+            } else {
+                IO.writeString("There are no items in the inventory.");
             }
-            IO.writeString(builder.toString());
+        } else {
+            for (Item item : itemList) {
+                IO.writeString(item.toListEntry(), item.isEquipped() ? Color.MAGENTA : Color.LIGHT_GRAY);
+            }
         }
     }
 

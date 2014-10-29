@@ -100,7 +100,7 @@ public class GameWindow extends JFrame {
         getContentPane().add(scrollPane, BorderLayout.CENTER);
         getContentPane().add(textField, BorderLayout.SOUTH);
 
-        setTitle(Constants.FULLNAME);
+        setTitle(Constants.TITLE);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -153,6 +153,7 @@ public class GameWindow extends JFrame {
         // The index should point to one after the last command, so the up key retrieves the last command.
         commandIndex = commandHistory.getCommandCount();
     }
+
     /**
      * Adds a string with a specific foreground color to the text pane.
      *

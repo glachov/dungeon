@@ -30,10 +30,14 @@ import java.util.Random;
 
 public class Game {
 
-    /** The Random object used to control random events throughout the game. */
+    /**
+     * The Random object used to control random events throughout the game.
+     */
     public static final Random RANDOM = new Random();
 
-    /** The window to what the games write output and get user input. */
+    /**
+     * The window to what the games write output and get user input.
+     */
     public static GameWindow gameWindow;
     private static GameState gameState;
 
@@ -155,14 +159,12 @@ public class Game {
             IO.writeString(gameState.getHeroPosition().toString());
         } else if (firstWord.equals("achievements")) {
             gameState.printUnlockedAchievements();
-        } else if (firstWord.equals("now")) {
-            gameState.getHero().printDateAndTime();
         } else if (firstWord.equals("spawns")) {
             gameState.getWorld().printSpawnCounters();
-        } else if (firstWord.equals("time")) {
-            DateAndTime.printTime();
-        } else if (firstWord.equals("date")) {
-            DateAndTime.printDate();
+        } else if (firstWord.equals("time") || firstWord.equals("date")) {
+            return gameState.getHero().printDateAndTime();
+        } else if (firstWord.equals("system")) {
+            SystemInfo.printSystemInfo();
         } else if (firstWord.equals("help") || firstWord.equals("?")) {
             Help.printHelp(inputWords);
         } else if (firstWord.equals("commands")) {
@@ -183,7 +185,7 @@ public class Game {
             if (inputWords.length > 1) {
                 Math.fibonacci(inputWords[1]);
             }
-        } else if (firstWord.equals("hint")) {
+        } else if (firstWord.equals("hint") || firstWord.equals("tip")) {
             gameState.printNextHint();
         } else if (firstWord.equals("poem")) {
             gameState.printNextPoem();

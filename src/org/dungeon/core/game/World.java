@@ -19,6 +19,7 @@ package org.dungeon.core.game;
 import org.dungeon.core.counters.CounterMap;
 import org.dungeon.core.creatures.Creature;
 import org.dungeon.io.IO;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -90,9 +91,8 @@ public class World implements Serializable {
      */
     // TODO: consider moving this method to PartOfDay
     public PartOfDay getDayPart() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(worldDate);
-        int hour = calendar.get(Calendar.HOUR);
+        DateTime dateTime = new DateTime(worldDate.getTime());
+        int hour = dateTime.getHourOfDay();
         if (1 <= hour && hour <= 4) {
             return PartOfDay.NIGHT;
         } else if (hour == 5 || hour == 6) {
